@@ -1,6 +1,6 @@
 import { Router } from "express";
 import ContractController from "../controllers/ContractController";
-import getProfile from "../middleware/getProfile";
+import getProfile from "../middlewares/getProfile";
 
 const controller = new ContractController();
 const ContractRouter = Router();

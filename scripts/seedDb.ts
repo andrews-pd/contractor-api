@@ -1,6 +1,6 @@
-import Contract from "../database/models/Contract";
-import Job from "../database/models/Job";
-import Profile from "../database/models/Profile";
+import Contract from "../src/database/models/Contract";
+import Job from "../src/database/models/Job";
+import Profile from "../src/database/models/Profile";
 
 async function seed() {
   // create tables
