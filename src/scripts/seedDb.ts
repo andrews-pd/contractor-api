@@ -1,7 +1,6 @@
-const { Profile, Contract, Job } = require('../src/model');
-
-/* WARNING THIS WILL DROP THE CURRENT DATABASE */
-seed();
+import Contract from "../database/models/Contract";
+import Job from "../database/models/Job";
+import Profile from "../database/models/Profile";
 
 async function seed() {
   // create tables
@@ -228,3 +227,5 @@ async function seed() {
     
   ]);
 }
+
+export default seed();
