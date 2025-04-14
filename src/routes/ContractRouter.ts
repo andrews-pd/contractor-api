@@ -11,4 +11,10 @@ ContractRouter.get(
   controller.getContractById.bind(controller)
 );
 
+ContractRouter.get(
+  "/contracts",
+  verifyToken,
+  controller.getContracts.bind(controller)
+);
+
 export default ContractRouter;

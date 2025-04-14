@@ -21,6 +21,20 @@ class ContractController {
       next(error);
     }
   }
+
+  public async getContracts(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const profile = req.body.profile;
+      const contract = await this.contractService.getAll(profile);
+      res.status(200).json(contract);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default ContractController;

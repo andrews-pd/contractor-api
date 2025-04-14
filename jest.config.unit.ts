@@ -3,6 +3,8 @@ export default {
   collectCoverageFrom: [
     'src/**',
     '!src/server.ts',
+    '!src/app.ts',
+    '!src/routes/index.ts',
     '!src/scripts/**',
   ],
   coverageDirectory: 'coverage/unit',

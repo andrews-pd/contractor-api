@@ -1,6 +1,9 @@
-interface IProfile {
-  id?: string;
-  type: "client" | "contractor";
+export enum ProfileType {
+  Client = "client",
+  Contractor = "contractor"
 }
 
-export default IProfile;
+export interface IProfile {
+  id?: number;
+  type: ProfileType;
+}

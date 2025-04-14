@@ -5,6 +5,7 @@ import ContractRouter from '../../../src/routes/ContractRouter';
 jest.mock('../../../src/controllers/ContractController', () => {
   return jest.fn().mockImplementation(() => ({
     getContractById: jest.fn((req, res) => res.status(200).json({ id: req.params.id, name: 'Test Contract' })),
+    getContracts: jest.fn((req, res) => res.status(200).json([{ id: req.body.profile.id, name: 'Test Contract' }])),
   }));
 });
 
@@ -27,5 +28,14 @@ describe('ContractRouter', () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ id: '123', name: 'Test Contract' });
+  });
+
+  it('GET /api/contracts/ - should return contracts with valid token', async () => {
+    const response = await request(app)
+      .get('/api/contracts')
+      .set('Authorization', 'Bearer mocktoken');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([{ id: 1, name: 'Test Contract' }]);
   });
 });
