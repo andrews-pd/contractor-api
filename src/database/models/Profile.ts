@@ -10,6 +10,8 @@ class Profile extends Model {
   declare profession: string;
   declare balance: number;
   declare type: "client" | "contractor";
+  declare password: string;
+  declare email: string;
 }
 Profile.init(
   {
@@ -30,6 +32,14 @@ Profile.init(
     },
     type: {
       type: sequelize.ENUM("client", "contractor"),
+    },
+    password: {
+      type: sequelize.STRING,
+      allowNull: true,
+    },
+    email: {
+      type: sequelize.STRING,
+      allowNull: true,
     },
   },
   {

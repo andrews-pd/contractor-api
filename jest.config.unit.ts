@@ -13,7 +13,6 @@ export default {
     '^.+\\.ts?$': [
       'ts-jest',
       {
-        isolatedModules: true,
         tsconfig: 'tsconfig.jest.json',
         emitDecoratorMetadata: false,
       },

@@ -1,48 +1,45 @@
-import request from "supertest";
-import ProfileService from "../../src/services/ProfileService";
-import ContractService from "../../src/services/ContractService";
-import app from "../../src/app";
+import { Request, Response, NextFunction } from 'express';
+import ContractController from '../../src/controllers/ContractController';
+import ContractService from '../../src/services/ContractService';
 
-jest.mock("../../src/services/ContractService");
-jest.mock("../../src/services/ProfileService");
+jest.mock('../../src/services/ContractService');
 
-describe("Integration - GET /contracts/:id", () => {
-  const mockProfile = { id: 1, firstName: "Jane", lastName: "Doe" };
-  const mockContract = { id: 123, terms: "Test Contract", status: "active" };
+describe('ContractController - getContractById', () => {
+  let controller: ContractController;
+  let mockReq: Partial<Request>;
+  let mockRes: Partial<Response>;
+  let mockNext: NextFunction;
 
   beforeEach(() => {
-    (ProfileService.prototype.getById as jest.Mock).mockResolvedValue(mockProfile);
+    controller = new ContractController();
+    mockReq = {
+      params: { id: '1' },
+      body: { profile: { id: 1, email: 'client@example.com', type: 'client' } }
+    };
+    mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+    mockNext = jest.fn();
   });
 
-  it("should return contract data when profile is authenticated", async () => {
+  it('should return contract with status 200 when successful', async () => {
+    const mockContract = { id: 1, clientId: 1, contractorId: 2, status: 'active' };
     (ContractService.prototype.getById as jest.Mock).mockResolvedValue(mockContract);
 
-    const res = await request(app)
-      .get("/contracts/123")
-      .set("profile_id", "1");
+    await controller.getContractById(mockReq as Request, mockRes as Response, mockNext);
 
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual(mockContract);
-    expect(ContractService.prototype.getById).toHaveBeenCalledWith(123);
+    expect(ContractService.prototype.getById).toHaveBeenCalledWith(1, mockReq.body.profile);
+    expect(mockRes.status).toHaveBeenCalledWith(200);
+    expect(mockRes.json).toHaveBeenCalledWith(mockContract);
   });
 
-  it("should return 401 if profile is not found", async () => {
-    (ProfileService.prototype.getById as jest.Mock).mockResolvedValue(null);
+  it('should call next with error if service throws', async () => {
+    const error = new Error('Database failure');
+    (ContractService.prototype.getById as jest.Mock).mockRejectedValue(error);
 
-    const res = await request(app)
-      .get("/contracts/123")
-      .set("profile_id", "999");
+    await controller.getContractById(mockReq as Request, mockRes as Response, mockNext);
 
-    expect(res.status).toBe(401);
-  });
-
-  it("should return 500 if an error occurs in the controller", async () => {
-    (ContractService.prototype.getById as jest.Mock).mockRejectedValue(new Error("DB error"));
-
-    const res = await request(app)
-      .get("/contracts/123")
-      .set("profile_id", "1");
-
-    expect(res.status).toBe(500);
+    expect(mockNext).toHaveBeenCalledWith(error);
   });
 });

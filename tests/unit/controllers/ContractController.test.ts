@@ -1,59 +1,69 @@
-import { Request, Response, NextFunction } from 'express';
-import ContractController from '../../../src/controllers/ContractController';
-import ContractService from '../../../src/services/ContractService';
+import { Request, Response, NextFunction } from "express";
+import ContractController from "../../../src/controllers/ContractController";
+import ContractService from "../../../src/services/ContractService";
 
-jest.mock('../../../src/services/ContractService');
+jest.mock("../../../src/services/ContractService");
 
 describe("ContractController", () => {
-  let contractController: ContractController;
-  let mockRequest: Partial<Request>;
-  let mockResponse: Partial<Response>;
-  let mockNext: NextFunction;
-  let jsonMock: jest.Mock;
-  let statusMock: jest.Mock;
+  let controller: ContractController;
+  let mockGetById: jest.Mock;
+  let req: Partial<Request>;
+  let res: Partial<Response>;
+  let next: NextFunction;
 
   beforeEach(() => {
-    contractController = new ContractController();
+    mockGetById = jest.fn();
+    (ContractService as jest.Mock).mockImplementation(() => ({
+      getById: mockGetById,
+    }));
 
-    mockRequest = {
+    controller = new ContractController();
+
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    next = jest.fn();
+  });
+
+  it("should return contract with status 200", async () => {
+    const fakeContract = { id: 1, terms: "some terms" };
+    mockGetById.mockResolvedValue(fakeContract);
+
+    req = {
       params: { id: "1" },
+      body: { profile: { id: 1, type: "client" } },
     };
 
-    jsonMock = jest.fn();
-    statusMock = jest.fn().mockReturnValue({ json: jsonMock });
+    await controller.getContractById(
+      req as Request,
+      res as Response,
+      next as NextFunction
+    );
 
-    mockResponse = {
-      status: statusMock,
+    expect(mockGetById).toHaveBeenCalledWith(1, { id: 1, type: "client" });
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(fakeContract);
+  });
+
+  it("should call next with error if service throws", async () => {
+    const error = new Error("Something went wrong");
+    mockGetById.mockRejectedValue(error);
+
+    req = {
+      params: { id: "1" },
+      body: { profile: { id: 1, type: "client" } },
     };
 
-    mockNext = jest.fn();
-  });
-
-  it("should return the contract with status 200", async () => {
-    const mockContract = { id: 1, name: "Test Contract" };
-    (ContractService.prototype.getById as jest.Mock).mockResolvedValue(mockContract);
-
-    await contractController.getContractById(
-      mockRequest as Request,
-      mockResponse as Response,
-      mockNext
+    await controller.getContractById(
+      req as Request,
+      res as Response,
+      next as NextFunction
     );
 
-    expect(statusMock).toHaveBeenCalledWith(200);
-    expect(jsonMock).toHaveBeenCalledWith(mockContract);
-    expect(mockNext).not.toHaveBeenCalled();
-  });
-
-  it("should call next with an error if service throws", async () => {
-    const mockError = new Error("Simulated error");
-    (ContractService.prototype.getById as jest.Mock).mockRejectedValue(mockError);
-
-    await contractController.getContractById(
-      mockRequest as Request,
-      mockResponse as Response,
-      mockNext
-    );
-
-    expect(mockNext).toHaveBeenCalledWith(mockError);
+    expect(next).toHaveBeenCalledWith(error);
+    expect(res.status).not.toHaveBeenCalled();
+    expect(res.json).not.toHaveBeenCalled();
   });
 });

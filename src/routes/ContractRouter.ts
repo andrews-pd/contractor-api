@@ -1,13 +1,13 @@
 import { Router } from "express";
 import ContractController from "../controllers/ContractController";
-import getProfile from "../middlewares/getProfile";
+import { verifyToken } from "../jwt/jwt";
 
 const controller = new ContractController();
 const ContractRouter = Router();
 
 ContractRouter.get(
   "/contracts/:id",
-  getProfile,
+  verifyToken,
   controller.getContractById.bind(controller)
 );
 

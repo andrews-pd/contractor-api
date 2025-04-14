@@ -14,7 +14,8 @@ class ContractController {
   ) {
     try {
       const { id } = req.params;
-      const contract = await this.contractService.getById(Number(id));
+      const profile = req.body.profile;
+      const contract = await this.contractService.getById(Number(id), profile);
       res.status(200).json(contract);
     } catch (error) {
       next(error);

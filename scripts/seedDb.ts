@@ -15,7 +15,9 @@ async function seed() {
       lastName: 'Potter',
       profession: 'Wizard',
       balance: 1150,
-      type:'client'
+      type: 'client',
+      email:'hp@email.com',
+      password: 'e10adc3949ba59abbe56e057f20f883e'
     }),
     Profile.create({
       id: 2,
@@ -23,7 +25,9 @@ async function seed() {
       lastName: 'Robot',
       profession: 'Hacker',
       balance: 231.11,
-      type:'client'
+      type:'client',
+      email:'mr.robot@email.com',
+      password: '8605fe02afd974f6833ae37b9861c8a6'
     }),
     Profile.create({
       id: 3,
@@ -31,7 +35,9 @@ async function seed() {
       lastName: 'Snow',
       profession: 'Knows nothing',
       balance: 451.3,
-      type:'client'
+      type:'client',
+      email:'john.snow@email.com',
+      password: '5bd2026f128662763c532f2f4b6f2476'
     }),
     Profile.create({
       id: 4,
@@ -39,7 +45,9 @@ async function seed() {
       lastName: 'Kethcum',
       profession: 'Pokemon master',
       balance: 1.3,
-      type:'client'
+      type:'client',
+      email:'ash.kethcum@email.com',
+      password: 'e35cf7b66449df565f93c607d5a81d09'
     }),
     Profile.create({
       id: 5,
@@ -47,7 +55,9 @@ async function seed() {
       lastName: 'Lenon',
       profession: 'Musician',
       balance: 64,
-      type:'contractor'
+      type:'contractor',
+      email:'john.lenon@email.com',
+      password: 'e10adc3949ba59abbe56e057f20f883e'
     }),
     Profile.create({
       id: 6,
@@ -55,7 +65,9 @@ async function seed() {
       lastName: 'Torvalds',
       profession: 'Programmer',
       balance: 1214,
-      type:'contractor'
+      type:'contractor',
+      email:'linus.torvalds@email.com',
+      password: '8605fe02afd974f6833ae37b9861c8a6'
     }),
     Profile.create({
       id: 7,
@@ -63,7 +75,9 @@ async function seed() {
       lastName: 'Turing',
       profession: 'Programmer',
       balance: 22,
-      type:'contractor'
+      type:'contractor',
+      email:'alan.turing@email.com',
+      password: '5bd2026f128662763c532f2f4b6f2476'
     }),
     Profile.create({
       id: 8,
@@ -71,7 +85,9 @@ async function seed() {
       lastName: 'II Elessar Telcontarvalds',
       profession: 'Fighter',
       balance: 314,
-      type:'contractor'
+      type:'contractor',
+      email:'aragorn@email.com',
+      password: 'e35cf7b66449df565f93c607d5a81d09'
     }),
     Contract.create({
       id:1,
