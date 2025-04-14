@@ -29,8 +29,8 @@ class ContractController {
   ) {
     try {
       const profile = req.body.profile;
-      const contract = await this.contractService.getAll(profile);
-      res.status(200).json(contract);
+      const contracts = await this.contractService.getAll(profile);
+      res.status(200).json(contracts);
     } catch (error) {
       next(error);
     }
