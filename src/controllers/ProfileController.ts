@@ -19,6 +19,17 @@ class ProfileController {
       next(error);
     }
   }
+
+  public async deposit(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { userId } = req.params;
+      const { amount } = req.body;
+      await this.profileService.deposit(Number(userId), amount);
+      res.status(201).json({ message: "Deposite  processed" });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default ProfileController;
