@@ -10,6 +10,7 @@ class Contract extends Model {
   declare status: "new" | "in_progress" | "terminated";
   declare Contractor: Profile;
   declare Client: Profile;
+  declare Jobs: Job[];
 }
 Contract.init(
   {
