@@ -21,26 +21,6 @@ Contract.init(
     status: {
       type: sequelize.ENUM("new", "in_progress", "terminated"),
     },
-    contractorId: {
-      type: sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'profiles',
-        key: 'id',
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE',
-    },
-    clientId: {
-      type: sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'profiles',
-        key: 'id',
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE',
-    },
   },
   {
     sequelize: db,

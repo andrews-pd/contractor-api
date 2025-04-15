@@ -32,6 +32,11 @@ Job.init(
   {
     sequelize: db,
     modelName: "Job",
+    indexes: [
+      {
+        fields: ["paymentDate"],
+      },
+    ],
   }
 );
 

@@ -6,6 +6,7 @@ export default {
     '!src/app.ts',
     '!src/routes/index.ts',
     '!src/scripts/**',
+    '!src/swagger.ts',
   ],
   coverageDirectory: 'coverage/unit',
   coverageReporters: ['lcov', 'text'],

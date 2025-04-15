@@ -94,3 +94,25 @@ For example, writing some unit tests or a simple frontend demonstrating calls to
 When you've finished the assignment, zip your repo (make sure to include the .git folder) and send us the zip file.
 
 Thank you and good luck! 🙏
+
+
+## Andrews TO DO list
+
+1. Remove all params/queries validation from controllers and create middlewares to do the validations.
+2. Refactor the seedDB.ts script into a well-structured format by creating separate directories for migrations and seed files. Implement individual seed scripts and separate commands for better maintainability.
+
+```plaintext
+project-root/
+├── prisma/
+│   ├── migrations/
+│   └── seeds/
+│       ├── users.seed.ts
+│       ├── products.seed.ts
+│       └── index.ts
+├── src/
+├── package.json
+└── tsconfig.json
+```
+
+3. Change the controllers and services to use DI using [Tsrynge](https://github.com/microsoft/tsyringe)
+4. Set up Docker for the API to run in a development environment, enabling isolated dependencies.
