@@ -66,4 +66,43 @@ describe("JobController", () => {
       expect(mockNext).toHaveBeenCalledWith(mockError);
     });
   });
+
+  describe("payJob", () => {
+    it("should pay a job and respond with status 201", async () => {
+      const mockJob = { id: 1, message: "Job paid successfully" };
+      mockRequest.params = { job_id: "1" };
+      (JobService.prototype.payJob as jest.Mock).mockResolvedValue(mockJob);
+
+      await jobController.payJob(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext
+      );
+
+      expect(JobService.prototype.payJob).toHaveBeenCalledWith(
+        1,
+        mockRequest.body.profile
+      );
+      expect(mockResponse.status).toHaveBeenCalledWith(201);
+      expect(mockResponse.json).toHaveBeenCalledWith({ message: mockJob.message });
+    });
+
+    it("should call next with an error if service throws an error", async () => {
+      const mockError = new Error("Service error");
+      mockRequest.params = { job_id: "1" };
+      (JobService.prototype.payJob as jest.Mock).mockRejectedValue(mockError);
+
+      await jobController.payJob(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext
+      );
+
+      expect(JobService.prototype.payJob).toHaveBeenCalledWith(
+        1,
+        mockRequest.body.profile
+      );
+      expect(mockNext).toHaveBeenCalledWith(mockError);
+    });
+  });
 });

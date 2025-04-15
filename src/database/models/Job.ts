@@ -1,6 +1,7 @@
 import { Model } from "sequelize";
 import sequelize from "sequelize";
 import db from ".";
+import Contract from "./Contract";
 
 class Job extends Model {
   declare id: number;
@@ -8,6 +9,7 @@ class Job extends Model {
   declare price: number;
   declare paid: boolean;
   declare paymentDate: Date;
+  declare Contract: Contract;
 }
 Job.init(
   {

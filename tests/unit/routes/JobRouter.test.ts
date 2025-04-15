@@ -5,6 +5,7 @@ import JobRouter from '../../../src/routes/JobRouter';
 jest.mock('../../../src/controllers/JobController', () => {
   return jest.fn().mockImplementation(() => ({
     getAllUnpaid: jest.fn((req, res) => res.status(200).json([{ id: 1, status: "unpaid" }])),
+    payJob: jest.fn((req, res) => res.status(201).json([{ id: 1, name: 'Test Contract' }])),
   }));
 });
 
@@ -27,5 +28,13 @@ describe('JobRouter', () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual([{ id: 1, status: "unpaid" }]);
+  });
+
+  it('POST /jobs/:job_id/pay - should pay job', async () => {
+    const response = await request(app)
+      .post('/api/jobs/:job_id/pay')
+      .set('Authorization', 'Bearer mocktoken');
+
+    expect(response.status).toBe(201);
   });
 });

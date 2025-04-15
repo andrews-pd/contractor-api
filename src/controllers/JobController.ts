@@ -20,6 +20,21 @@ class JobController {
       next(error);
     }
   }
+
+  public async payJob(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { job_id } = req.params;
+      const profile = req.body.profile;
+      await this.jobService.payJob(Number(job_id), profile);
+      res.status(201).json({ message: "Job paid successfully" });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default JobController;

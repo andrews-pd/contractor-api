@@ -11,4 +11,10 @@ JobRouter.get(
   controller.getAllUnpaid.bind(controller)
 );
 
+JobRouter.post(
+  "/jobs/:job_id/pay",
+  verifyToken,
+  controller.payJob.bind(controller)
+);
+
 export default JobRouter;

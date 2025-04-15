@@ -4,6 +4,6 @@ export enum ProfileType {
 }
 
 export interface IProfile {
-  id?: number;
+  id: number;
   type: ProfileType;
 }
