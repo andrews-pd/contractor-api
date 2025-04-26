@@ -6,6 +6,11 @@ import Contract from '../database/models/Contract';
 import Job from '../database/models/Job';
 import { ContractStatus } from '../interfaces/IContract';
 import db from '../database/models';
+import { ClientNotFoundError } from '../errors/ClientNotFoundError';
+import { OnlyClientsCanDepositError } from '../errors/OnlyClientsCanDepositError';
+import { InvalidDepositAmountError } from '../errors/InvalidDepositAmountError';
+import { NoJobsInProgressError } from '../errors/NoJobsInProgressError';
+import { DepositLimitExceededError } from '../errors/DepositLimitExceededError';
 
 class ProfileService {
   private profileModel: ModelStatic<Profile> = Profile;
@@ -66,15 +71,15 @@ class ProfileService {
       transaction,
     });
 
-    if (!client) throw new Error('Client not found');
-    if (client.type !== 'client') throw new Error('Only clients can deposit');
+    if (!client) throw new ClientNotFoundError();
+    if (client.type !== 'client') throw new OnlyClientsCanDepositError();
 
     return client;
   }
 
   private validateDepositAmount(amount: number) {
     if (!amount || amount < 0) {
-      throw new Error('Deposit amount must be positive');
+      throw new InvalidDepositAmountError();
     }
   }
 
@@ -95,15 +100,16 @@ class ProfileService {
     });
 
     if (!jobs || jobs.length === 0) {
-      throw new Error('No jobs in progress');
+      throw new NoJobsInProgressError();
     }
 
     return jobs;
   }
 
   private validateDepositLimit(amount: number, totalJobPrice: number) {
-    if (amount > totalJobPrice * 0.25) {
-      throw new Error('Deposit amount exceeds 25% of unpaid jobs');
+    const minDeposit = 0.25 * totalJobPrice;
+    if (amount > minDeposit) {
+      throw new DepositLimitExceededError();
     }
   }
 }

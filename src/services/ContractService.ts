@@ -3,6 +3,7 @@ import Contract from '../database/models/Contract';
 import { IProfile, ProfileType } from '../interfaces/IProfile';
 import { Op } from 'sequelize';
 import { ContractStatus } from '../interfaces/IContract';
+import { UnauthorizedContractAccessError } from '../errors/UnauthorizedContractAccessError';
 
 class ContractService {
   private contractModel: ModelStatic<Contract> = Contract;
@@ -13,7 +14,7 @@ class ContractService {
   public async getById(id: number, profile: IProfile): Promise<Contract | null> {
     const { id: profileId, type } = profile;
     if (Number(profileId) !== id) {
-      throw new Error('Users can only access their respective contracts');
+      throw new UnauthorizedContractAccessError();
     }
 
     const config = type === ProfileType.Client ? { ClientId: profileId } : { ContractorId: profileId };

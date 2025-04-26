@@ -4,6 +4,10 @@ import Job from '../database/models/Job';
 import Contract from '../database/models/Contract';
 import db from '../database/models';
 import Profile from '../database/models/Profile';
+import { JobAlreadyPaidError } from '../errors/JobAlreadyPaidError';
+import { ClientNotFoundError } from '../errors/ClientNotFoundError';
+import { JobNotFoundError } from '../errors/JobNotFoundError';
+import { InsufficientFundsError } from '../errors/InsufficientFundsError';
 
 class JobService {
   private jobModel: ModelStatic<Job> = Job;
@@ -63,7 +67,7 @@ class JobService {
     });
 
     if (!job) {
-      throw new Error('Job not found');
+      throw new JobNotFoundError();
     }
 
     return job;
@@ -71,7 +75,7 @@ class JobService {
 
   private validateJob(job: Job) {
     if (job.paid) {
-      throw new Error('Job is already paid');
+      throw new JobAlreadyPaidError();
     }
   }
 
@@ -82,7 +86,7 @@ class JobService {
     });
 
     if (!client) {
-      throw new Error('Client not found');
+      throw new ClientNotFoundError();
     }
 
     return client;
@@ -90,7 +94,7 @@ class JobService {
 
   private validateClientBalance(client: Profile, jobPrice: number) {
     if (client.balance < jobPrice) {
-      throw new Error('Insufficient funds for the payment.');
+      throw new InsufficientFundsError();
     }
   }
 

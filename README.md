@@ -114,5 +114,7 @@ project-root/
 └── tsconfig.json
 ```
 
-3. Change the controllers and services to use DI using [Tsrynge](https://github.com/microsoft/tsyringe)
+3. Change the controllers and services to use DI using [Tsrynge](https://github.com/microsoft/tsyringe).
 4. Set up Docker for the API to run in a development environment, enabling isolated dependencies.
+5. Implementing redis caching calls from database.
+6. Create error classes for handle the exceptions.
