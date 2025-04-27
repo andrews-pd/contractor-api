@@ -1,5 +1,6 @@
 import { Router } from "express";
 import AdminController from "../controllers/AdminController";
+import { validateDatesAndLimit } from "../middlewares/validateDatesAndLimit";
 
 /**
  * @swagger
@@ -66,11 +67,13 @@ const AdminRouter = Router();
 
 AdminRouter.get(
   "/admin/best-profession",
+  validateDatesAndLimit,
   controller.getBestProfession.bind(controller)
 );
 
 AdminRouter.get(
   "/admin/best-clients",
+  validateDatesAndLimit,
   controller.getBestClients.bind(controller)
 );
 

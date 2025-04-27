@@ -11,26 +11,7 @@ class AdminController {
     try {
       const { start, end } = req.query;
 
-      if (!start || !end) {
-        return res.status(400).json({ message: 'Start and end dates are required' });
-      }
-
-      if (typeof start !== 'string' || typeof end !== 'string') {
-        return res.status(400).json({ message: 'Start and end dates must be strings' });
-      }
-
-      const startDate = new Date(start);
-      const endDate = new Date(end);
-
-      if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-        return res.status(400).json({ message: 'Invalid date format' });
-      }
-
-      if (startDate >= endDate) {
-        return res.status(400).json({ message: 'Start date must be before end date' });
-      }
-
-      const profession = await this.adminService.getBestProfession(start, end);
+      const profession = await this.adminService.getBestProfession(start as string, end as string);
       
       res.status(200).json(profession);
     } catch (error) {
@@ -47,28 +28,9 @@ class AdminController {
         limitNumber = 2;
       }
 
-      if (!start || !end) {
-        return res.status(400).json({ message: 'Start and end dates are required' });
-      }
-
-      if (typeof start !== 'string' || typeof end !== 'string') {
-        return res.status(400).json({ message: 'Start and end dates must be strings' });
-      }
-
-      const startDate = new Date(start);
-      const endDate = new Date(end);
-
-      if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-        return res.status(400).json({ message: 'Invalid date format' });
-      }
+      const clients = await this.adminService.getBestClients(start as string, end as string, limitNumber);
       
-      if (startDate >= endDate) {
-        return res.status(400).json({ message: 'Start date must be before end date' });
-      }
-
-      const profession = await this.adminService.getBestClients(start, end, limitNumber);
-      
-      res.status(200).json(profession);
+      res.status(200).json(clients);
     } catch (error) {
       next(error);
     }
