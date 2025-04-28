@@ -1,3 +1,4 @@
+import { container } from "tsyringe";
 import { Router } from "express";
 import AdminController from "../controllers/AdminController";
 import { validateDatesAndLimit } from "../middlewares/validateDatesAndLimit";
@@ -62,7 +63,7 @@ import { validateDatesAndLimit } from "../middlewares/validateDatesAndLimit";
  *         description: Erro interno do servidor
  */
 
-const controller = new AdminController();
+const controller = container.resolve(AdminController);
 const AdminRouter = Router();
 
 AdminRouter.get(

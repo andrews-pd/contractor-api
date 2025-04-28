@@ -1,142 +1,60 @@
+import 'reflect-metadata';
 import AdminService from '../../../src/services/AdminService';
-import { col, fn, Op } from 'sequelize';
-import Profile from '../../../src/database/models/Profile';
+import AdminRepository from '../../../src/repositories/AdminRepository';
 import Job from '../../../src/database/models/Job';
-import Contract from '../../../src/database/models/Contract';
 
-jest.mock('../../../src/database/models/Profile', () => {
-  return {
-    findOne: jest.fn(),
-  };
-});
-
-jest.mock('../../../src/database/models/Job');
-
-jest.mock('../../../src/database/models/Contract', () => {
-  return {};
-});
+jest.mock('../../../src/repositories/AdminRepository');
 
 describe('AdminService', () => {
   let adminService: AdminService;
+  const getBestProfession = jest.fn();
+  const getBestClients = jest.fn();
 
   beforeEach(() => {
-    adminService = new AdminService();
-    jest.clearAllMocks();
+    adminService = new AdminService( { getBestProfession, getBestClients } as unknown as AdminRepository);
   });
 
   describe('getBestProfession', () => {
-    it('should return the profession with the highest total earnings within the date range', async () => {
-      const start = '2023-01-01';
-      const end = '2023-12-31';
-      const mockResult = { profession: 'Engineer', totalEarned: 20000 };
+    it('should return the best profession within the given date range', async () => {
+      const mockJob = { id: 1, profession: 'Engineer' } as unknown as Job;
+      getBestProfession.mockResolvedValue(mockJob);
 
-      (Job.findOne as jest.Mock).mockResolvedValue(mockResult);
+      const result = await adminService.getBestProfession('2023-01-01', '2023-12-31');
 
-      const result = await adminService.getBestProfession(start, end);
-
-      expect(Job.findOne).toHaveBeenCalledWith({
-        attributes: [
-          [col('Contract.Contractor.profession'), 'profession'],
-          [fn('sum', col('price')), 'totalEarned'],
-        ],
-        include: [
-          {
-            model: Contract,
-            attributes: [],
-            include: [
-              {
-                model: Profile,
-                as: 'Contractor',
-                attributes: [],
-                where: { type: 'contractor' },
-              },
-            ],
-          },
-        ],
-        where: {
-          paid: true,
-          paymentDate: {
-            [Op.between]: [start, end],
-          },
-        },
-        group: ['Contract.Contractor.profession'],
-        order: [[fn('sum', col('price')), 'DESC']],
-        raw: true,
-      });
-
-      expect(result).toEqual(mockResult);
+      expect(getBestProfession).toHaveBeenCalledWith('2023-01-01', '2023-12-31');
+      expect(result).toEqual(mockJob);
     });
 
-    it('should return null if no profession is found within the date range', async () => {
-      const start = '2023-01-01';
-      const end = '2023-12-31';
+    it('should return null if no profession is found', async () => {
+      getBestProfession.mockResolvedValue(null);
 
-      (Job.findOne as jest.Mock).mockResolvedValue(null);
+      const result = await adminService.getBestProfession('2023-01-01', '2023-12-31');
 
-      const result = await adminService.getBestProfession(start, end);
-
+      expect(getBestProfession).toHaveBeenCalledWith('2023-01-01', '2023-12-31');
       expect(result).toBeNull();
     });
   });
 
   describe('getBestClients', () => {
-    it('should return the top clients based on total payments within the date range', async () => {
-      const start = '2023-01-01';
-      const end = '2023-12-31';
-      const limit = 2;
-      const mockResult = [
-        { id: 1, fullName: 'John Doe', totalPaid: 5000 },
-        { id: 2, fullName: 'Jane Smith', totalPaid: 3000 },
-      ];
+    it('should return the best clients within the given date range and limit', async () => {
+      const mockClients = [
+        { id: 1, name: 'Client A', paid: 1000 },
+        { id: 2, name: 'Client B', paid: 800 },
+      ] as unknown as Job[];
+      getBestClients.mockResolvedValue(mockClients);
 
-      (Job.findAll as jest.Mock).mockResolvedValue(mockResult);
+      const result = await adminService.getBestClients('2023-01-01', '2023-12-31', 2);
 
-      const result = await adminService.getBestClients(start, end, limit);
-
-      expect(Job.findAll).toHaveBeenCalledWith({
-        attributes: [
-          [col('Contract.Client.id'), 'id'],
-          [fn('concat', col('Contract.Client.firstName'), ' ', col('Contract.Client.lastName')), 'fullName'],
-          [fn('sum', col('price')), 'totalPaid'],
-        ],
-        include: [
-          {
-            model: Contract,
-            attributes: [],
-            include: [
-              {
-                model: Profile,
-                as: 'Client',
-                attributes: [],
-                where: { type: 'client' },
-              },
-            ],
-          },
-        ],
-        where: {
-          paid: true,
-          paymentDate: {
-            [Op.between]: [start, end],
-          },
-        },
-        group: ['Contract.Client.id'],
-        order: [[fn('sum', col('price')), 'DESC']],
-        limit,
-        raw: true,
-      });
-
-      expect(result).toEqual(mockResult);
+      expect(getBestClients).toHaveBeenCalledWith('2023-01-01', '2023-12-31', 2);
+      expect(result).toEqual(mockClients);
     });
 
-    it('should return an empty array if no clients are found within the date range', async () => {
-      const start = '2023-01-01';
-      const end = '2023-12-31';
-      const limit = 2;
+    it('should return an empty array if no clients are found', async () => {
+      getBestClients.mockResolvedValue([]);
 
-      (Job.findAll as jest.Mock).mockResolvedValue([]);
+      const result = await adminService.getBestClients('2023-01-01', '2023-12-31', 2);
 
-      const result = await adminService.getBestClients(start, end, limit);
-
+      expect(getBestClients).toHaveBeenCalledWith('2023-01-01', '2023-12-31', 2);
       expect(result).toEqual([]);
     });
   });

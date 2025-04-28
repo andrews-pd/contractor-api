@@ -98,8 +98,12 @@ Thank you and good luck! 🙏
 
 ## Andrews TO DO list
 
-1. Remove all params/queries validation from controllers and create middlewares to do the validations.
-2. Refactor the seedDB.ts script into a well-structured format by creating separate directories for migrations and seed files. Implement individual seed scripts and separate commands for better maintainability.
+1. [OK] Remove all params/queries validation from controllers and create middlewares to do the validations.
+2. [OK] Create error classes for handle the exceptions.
+3. [OK] Change the controllers and services to use DI using [Tsrynge](https://github.com/microsoft/tsyringe).
+4. Implementing redis caching calls from database.
+5. Set up Docker for the API to run in a development environment, enabling isolated dependencies.
+6. Refactor the seedDB.ts script into a well-structured format by creating separate directories for migrations and seed files. Implement individual seed scripts and separate commands for better maintainability.
 
 ```plaintext
 project-root/
@@ -113,8 +117,3 @@ project-root/
 ├── package.json
 └── tsconfig.json
 ```
-
-3. Change the controllers and services to use DI using [Tsrynge](https://github.com/microsoft/tsyringe).
-4. Set up Docker for the API to run in a development environment, enabling isolated dependencies.
-5. Implementing redis caching calls from database.
-6. Create error classes for handle the exceptions.

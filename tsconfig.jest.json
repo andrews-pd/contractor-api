@@ -19,7 +19,7 @@
     "noImplicitAny": false,
     "useUnknownInCatchVariables": false,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": false,
+    "emitDecoratorMetadata": true,
     "isolatedModules": true,
     "types": [
       "node"

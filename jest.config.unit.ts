@@ -10,7 +10,7 @@ export default {
   ],
   coverageDirectory: 'coverage/unit',
   coverageReporters: ['lcov', 'text'],
-  setupFilesAfterEnv: ['jest-extended/all'],
+  setupFilesAfterEnv: ['jest-extended/all', '<rootDir>/tests/unit/jest.setup.ts'],
   testMatch: ['**/tests/unit/**/?(*.)@(spec|test).[tj]s?(x)'],
   transform: {
     '^.+\\.ts?$': [

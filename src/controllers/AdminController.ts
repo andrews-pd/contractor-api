@@ -1,11 +1,10 @@
+import { injectable } from 'tsyringe';
 import { NextFunction, Request, Response } from 'express';
 import AdminService from '../services/AdminService';
 
+@injectable()
 class AdminController {
-  private adminService: AdminService;
-  constructor() {
-    this.adminService = new AdminService();
-  }
+  constructor(private adminService: AdminService) {}
 
   public async getBestProfession(req: Request, res: Response, next: NextFunction) {
     try {

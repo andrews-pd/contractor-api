@@ -1,80 +1,18 @@
-import Contract from '../database/models/Contract';
-import { Op, fn, col } from "sequelize";
-import Profile from '../database/models/Profile';
+import { injectable } from 'tsyringe';
 import Job from '../database/models/Job';
+import AdminRepository from '../repositories/AdminRepository';
 
+@injectable()
 class AdminService {
+  constructor(private readonly adminRepository: AdminRepository) {}
 
   public async getBestProfession(start: string, end: string): Promise<Job | null> {
-    const topProfession = await Job.findOne({
-    attributes: [
-      [col("Contract.Contractor.profession"), "profession"],
-      [fn("sum", col("price")), "totalEarned"],
-    ],
-    include: [
-      {
-        model: Contract,
-        attributes: [],
-        include: [
-          {
-            model: Profile,
-            as: "Contractor",
-            attributes: [],
-            where: { type: "contractor" },
-          },
-        ],
-      },
-    ],
-    where: {
-      paid: true,
-      paymentDate: {
-        [Op.between]: [start, end],
-      },
-    },
-    group: ["Contract.Contractor.profession"],
-    order: [[fn("sum", col("price")), "DESC"]],
-    raw: true,
-  });
-
-  return topProfession;
+    return await this.adminRepository.getBestProfession(start, end);
   }
 
   public async getBestClients(start: string, end: string, limit: number) {
-    const bestClients = await Job.findAll({
-      attributes: [
-        [col("Contract.Client.id"), "id"],
-        [fn("concat", col("Contract.Client.firstName"), " ", col("Contract.Client.lastName")), "fullName"],
-        [fn("sum", col("price")), "totalPaid"],
-      ],
-      include: [
-        {
-          model: Contract,
-          attributes: [],
-          include: [
-            {
-              model: Profile,
-              as: "Client",
-              attributes: [],
-              where: { type: "client" },
-            },
-          ],
-        },
-      ],
-      where: {
-        paid: true,
-        paymentDate: {
-          [Op.between]: [start, end],
-        },
-      },
-      group: ["Contract.Client.id"],
-      order: [[fn("sum", col("price")), "DESC"]],
-      limit,
-      raw: true,
-    });
-  
-    return bestClients;
+    return await this.adminRepository.getBestClients(start, end, limit);
   }
-
 }
 
 export default AdminService;
