@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import AdminService from '../../../src/services/AdminService';
 import AdminRepository from '../../../src/repositories/AdminRepository';
 import Job from '../../../src/database/models/Job';
+import CacheService from '../../../src/cache/CacheService';
 
 jest.mock('../../../src/repositories/AdminRepository');
 
@@ -9,15 +10,20 @@ describe('AdminService', () => {
   let adminService: AdminService;
   const getBestProfession = jest.fn();
   const getBestClients = jest.fn();
+  const get = jest.fn();
 
   beforeEach(() => {
-    adminService = new AdminService( { getBestProfession, getBestClients } as unknown as AdminRepository);
+    adminService = new AdminService(
+      { getBestProfession, getBestClients } as unknown as AdminRepository,
+      { get } as unknown as CacheService
+    );
   });
 
   describe('getBestProfession', () => {
     it('should return the best profession within the given date range', async () => {
       const mockJob = { id: 1, profession: 'Engineer' } as unknown as Job;
       getBestProfession.mockResolvedValue(mockJob);
+      get.mockResolvedValue(null);
 
       const result = await adminService.getBestProfession('2023-01-01', '2023-12-31');
 
@@ -27,6 +33,7 @@ describe('AdminService', () => {
 
     it('should return null if no profession is found', async () => {
       getBestProfession.mockResolvedValue(null);
+      get.mockResolvedValue(null);
 
       const result = await adminService.getBestProfession('2023-01-01', '2023-12-31');
 
@@ -42,6 +49,7 @@ describe('AdminService', () => {
         { id: 2, name: 'Client B', paid: 800 },
       ] as unknown as Job[];
       getBestClients.mockResolvedValue(mockClients);
+      get.mockResolvedValue(null);
 
       const result = await adminService.getBestClients('2023-01-01', '2023-12-31', 2);
 
@@ -51,6 +59,7 @@ describe('AdminService', () => {
 
     it('should return an empty array if no clients are found', async () => {
       getBestClients.mockResolvedValue([]);
+      get.mockResolvedValue(null);
 
       const result = await adminService.getBestClients('2023-01-01', '2023-12-31', 2);
 
