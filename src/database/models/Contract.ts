@@ -21,12 +21,37 @@ Contract.init(
     status: {
       type: sequelize.ENUM("new", "in_progress", "terminated"),
     },
+    ContractorId: {
+      type: sequelize.INTEGER,
+      references: {
+        model: "Profiles",
+        key: "id",
+      },
+    },
+    ClientId: {
+      type: sequelize.INTEGER,
+      references: {
+        model: "Profiles",
+        key: "id",
+      },
+    },
   },
   {
     sequelize: db,
     modelName: "Contract",
+    indexes: [
+      {
+        name: "idx_contracts_contractorId",
+        fields: ["ContractorId"],
+      },
+      {
+        name: "idx_contracts_clientId",
+        fields: ["ClientId"],
+      },
+    ],
   }
 );
+
 
 Contract.hasMany(Job);
 Job.belongsTo(Contract);

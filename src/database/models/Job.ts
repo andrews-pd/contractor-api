@@ -34,8 +34,13 @@ Job.init(
     modelName: "Job",
     indexes: [
       {
+        name: "idx_jobs_paymentDate",
         fields: ["paymentDate"],
       },
+      {
+        name: "idx_jobs_paid",
+        fields: ["paid"],
+      }
     ],
   }
 );
