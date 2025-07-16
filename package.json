@@ -1,7 +1,7 @@
 {
-  "name": "deel-task",
+  "name": "contractor-api",
   "version": "1.0.0",
-  "description": "A repository containing a home task for Backend Engineer interview at Deel.",
+  "description": "A repository containing contractor-api.",
   "author": "Andrews Santiago",
   "private": true,
   "scripts": {
